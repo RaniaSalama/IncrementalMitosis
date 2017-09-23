@@ -1,0 +1,22 @@
+
+public class DistanceManager {
+
+	String distanceMethod;
+	
+	public DistanceManager(String distanceMethod) {
+		this.distanceMethod = distanceMethod;
+	}
+	
+	public double calculateDistance (Pattern pattern1, Pattern pattern2) {
+		if (distanceMethod.equalsIgnoreCase("euclidean"))
+			pDistance = getEculidanDistance(newPoint, point);
+		else if (distanceMethod.equalsIgnoreCase("cosine"))
+			pDistance = cosine(newPoint, point);
+		else if (distanceMethod.equalsIgnoreCase("pearson"))
+			pDistance = getPearsonDistance(newPoint, point);
+		else if (distanceMethod.equalsIgnoreCase("kld"))
+			pDistance = KLDistance(newPoint, point);
+		else if (distanceMethod.equalsIgnoreCase("jaccard"))
+			pDistance = Jaccard(newPoint, point);
+	}
+}

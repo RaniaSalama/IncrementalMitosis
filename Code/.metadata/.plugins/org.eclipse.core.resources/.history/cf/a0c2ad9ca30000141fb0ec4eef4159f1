@@ -1,0 +1,69 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Main {
+
+	public static HashMap<Integer, Cluster> cluster(String fileName, double f,
+			double k, int patternNo) throws IOException {
+		Phase1 phase1 = new Phase1(f, k);
+		Phase2 phase2 = new Phase2(f, k);
+		Phase3 phase3 = new Phase3(f, k);
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<Association> left = new ArrayList<Association>();
+		ArrayList<Association> associations = new ArrayList<Association>();
+
+		for (int i = 1; i <= patternNo; i++) {
+			System.out.println(i);
+			String pattern = reader.readLine();
+			String[] line = pattern.split("\\s+");
+			Point point = new Point();
+			HashMap<String, Double> map = new HashMap<String, Double>();
+			int id = 0;
+			for (String token : line) {
+				map.put(id + "", Double.parseDouble(token));
+				id++;
+			}
+			point.setQuery(pattern);
+			point.setDim(map);
+			point.setId(i);
+			point.setClusterID(i);
+			point.setFinalClusterID(i);
+			associations = phase1.getIncrementalFRange(point, points);
+			ArrayList<Association> fClusterAssociations = phase2
+					.getFrangeClusterAssociation(associations, point);
+			points.add(point);
+			phase2.combineTwoArrayLists(associations, left);
+			phase2.combineTwoArrayLists(associations, fClusterAssociations);
+			left = phase2.incrementalMergeCluster(associations);
+			left = phase2.refineStepOne(left);
+			phase3.refineClusters(phase2.clusters, points);
+			phase2.clusters = phase3.clusters;
+			phase2.clusterMap = phase3.clusterMap;
+		}
+		reader.close();
+		return phase3.clusterMap;
+	}
+
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException {
+
+		HashMap<Integer, Cluster> clusters = cluster("test.txt", 1.5, 1.5, 10);
+		for (int clusterID : clusters.keySet()) {
+			Cluster cluster = clusters.get(clusterID);
+			System.out.println("Points in cluster " + cluster.getId() + " ");
+			for (Point point : cluster.getPatterns()) {
+				System.out.print(point.getQuery() + " ");
+			}
+			System.out.println();
+		}
+
+	}
+
+}

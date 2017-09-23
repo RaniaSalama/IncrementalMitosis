@@ -1,0 +1,13 @@
+
+public class DistanceManager {
+
+	String distanceMethod;
+	
+	public DistanceManager(String distanceMethod) {
+		this.distanceMethod = distanceMethod;
+	}
+	
+	public double calculateDistance (Pattern pattern1, Pattern pattern2) {
+		
+	}
+}

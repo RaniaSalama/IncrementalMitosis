@@ -1,0 +1,9 @@
+
+public class DistanceManager {
+
+	String distanceMethod;
+	
+	public DistanceManager(String distanceMethod) {
+		this.distanceMethod = distanceMethod;
+	}
+}
